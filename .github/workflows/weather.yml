@@ -1,0 +1,37 @@
+name: weather
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          repository: wangguangyou/script_actions
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache node_modules
+        uses: actions/cache@v2 # 使用 GitHub 官方的缓存 Action。
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }} # 使用 package-lock.json 的 Hash 作为缓存的 key。也可以使用 package.json 代替
+      - name: npm install
+        run: |
+          npm install
+      - name: '运行 【天气脚本】'
+        run: |
+          node weather.js
+        env:
+          EMAIL_JSON: ${{ secrets.EMAIL_JSON }}
+          EMAIL_ROLE: ${{ secrets.EMAIL_ROLE }}
+          HF_KEY: ${{secrets.HF_KEY}}
+          PUSH_KEY: ${{secrets.PUSH_KEY}}
