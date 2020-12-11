@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         with:
           repository: wangguangyou/script_actions
       - name: Use Node.js ${{ matrix.node-version }}
